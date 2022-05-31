@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
     },
   })
   .then(dbCatData => {
-    if (!dbCat) {
+    if (!dbCatData) {
       res.status(404).json( { message: 'No categories are found!'} );
       return;
     }
@@ -63,11 +63,16 @@ router.post("/", (req, res) => {
 router.put("/:id", async (req, res) => {
   // update a category by its `id` value
   try {
-    const categoryData = await Category.update({
-      where: {
-        id: req.params.id
-      }
-    })
+    // The below code works or (req.body, { where: { id: req.params.id} });
+    const categoryData = await Category.update(
+      {
+        category_name: req.body.category_name
+      }, 
+      {
+        where: {
+          id: req.params.id
+        }
+      });
     if(!categoryData) {
       res.status(404).json( { message: 'No Category exists with this id'} );
       return;
